@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>com.intrasoft</groupId>
+      <artifactId>multiple-env-demo-parent</artifactId>
+      <version>${revision}</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>multiple-env-jpa</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <classifier>${target.server}</classifier>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>wildfly</id>
+      <properties>
+        <target.server>${wildfly.suffix}</target.server>
+      </properties>
+
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.coderplus.maven.plugins</groupId>
+              <artifactId>copy-rename-maven-plugin</artifactId>
+              <version>1.0.1</version>
+              <executions>
+                <execution>
+                  <id>rename-file</id>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <overWrite>true</overWrite>
+                    <sourceFile>${basedir}/src/main/resources/META-INF/wildfly-persistence.xml</sourceFile>
+                    <destinationFile>${basedir}/src/main/resources/META-INF/persistence.xml</destinationFile>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>weblogic</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <target.server>${weblogic.suffix}</target.server>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.coderplus.maven.plugins</groupId>
+              <artifactId>copy-rename-maven-plugin</artifactId>
+              <version>1.0.1</version>
+              <executions>
+                <execution>
+                  <id>rename-file</id>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <overWrite>true</overWrite>
+                    <sourceFile>${basedir}/src/main/resources/META-INF/weblogic-persistence.xml</sourceFile>
+                    <destinationFile>${basedir}/src/main/resources/META-INF/persistence.xml</destinationFile>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
